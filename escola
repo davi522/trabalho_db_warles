@@ -1,0 +1,133 @@
+import os
+
+#parte de cadastro
+
+def cadastrar_aluno():
+    matricula = input("Matrícula: ")
+    nome = input("Nome: ")
+    turma = input("Turma: ")
+
+    with open("alunos.txt", "a", encoding="utf-8") as f:
+        f.write(f"{matricula},{nome},{turma}\n")
+
+    print("Aluno cadastrado!")
+
+
+def cadastrar_professor():
+    id_prof = input("ID: ")
+    nome = input("Nome: ")
+    area = input("Área: ")
+
+    with open("professores.txt", "a", encoding="utf-8") as f:
+        f.write(f"{id_prof},{nome},{area}\n")
+
+    print("Professor cadastrado!")
+
+
+def cadastrar_disciplina():
+    id_disc = input("ID: ")
+    nome = input("Nome: ")
+    carga = input("Carga horária: ")
+    prof_id = input("ID do professor: ")
+
+    with open("disciplinas.txt", "a", encoding="utf-8") as f:
+        f.write(f"{id_disc},{nome},{carga},{prof_id}\n")
+
+    print("Disciplina cadastrada!")
+
+
+# parte de ler 
+
+def ler_arquivo():
+    print("\nQual arquivo deseja ler?")
+    print("1 - alunos.txt")
+    print("2 - professores.txt")
+    print("3 - disciplinas.txt")
+
+    op = input("Escolha: ")
+
+    arquivos = {
+        "1": "alunos.txt",
+        "2": "professores.txt",
+        "3": "disciplinas.txt"
+    }
+
+    if op not in arquivos:
+        print("Opção inválida")
+        return
+
+    arquivo = arquivos[op]
+
+    if not os.path.exists(arquivo):
+        print("Arquivo não existe.")
+        return
+
+    print(f"\nConteúdo de {arquivo}:\n")
+
+    with open(arquivo, "r", encoding="utf-8") as f:
+        conteudo = f.read()
+
+    if not conteudo.strip():
+        print("Arquivo vazio.")
+    else:
+        print(conteudo)
+
+
+
+# APAGAR ARQUIVO
+
+def apagar_arquivo():
+    print("\n1 - alunos.txt")
+    print("2 - professores.txt")
+    print("3 - disciplinas.txt")
+
+    op = input("Escolha qual apagar: ")
+
+    arquivos = {
+        "1": "alunos.txt",
+        "2": "professores.txt",
+        "3": "disciplinas.txt"
+    }
+
+    if op not in arquivos:
+        print("Opção inválida")
+        return
+
+    arquivo = arquivos[op]
+
+    if os.path.exists(arquivo):
+        os.remove(arquivo)
+        print(f"{arquivo} apagado!")
+    else:
+        print("Arquivo não existe.")
+
+
+
+# MENU
+
+
+while True:
+    print("SISTEMA ESCOLAR (BÁSICO)")
+    print("1 - Cadastrar aluno")
+    print("2 - Cadastrar professor")
+    print("3 - Cadastrar disciplina")
+    print("4 - Ler arquivo")
+    print("5 - Apagar arquivo")
+    print("0 - Sair")
+
+    op = input("Escolha: ")
+
+    if op == "1":
+        cadastrar_aluno()
+    elif op == "2":
+        cadastrar_professor()
+    elif op == "3":
+        cadastrar_disciplina()
+    elif op == "4":
+        ler_arquivo()
+    elif op == "5":
+        apagar_arquivo()
+    elif op == "0":
+        break
+    else:
+        print("Opção inválida")
