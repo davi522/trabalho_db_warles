@@ -1,0 +1,159 @@
+import os
+
+ARQUIVO = "banco.txt"
+
+# MENU PRINCIPAL
+
+def menu_principal():
+    while True:
+        print("\n===== Banco de Dados =====")
+        print("1 - Entrar no Sistema escolar")
+        print("0 - Sair")
+
+        op = input("Escolha: ")
+
+        if op == "1":
+            menu_banco()
+        elif op == "0":
+            break
+        else:
+            print("Opção inválida!")
+
+
+
+# MENU DO BANCO
+
+def menu_banco():
+    while True:
+        print("\n===== BANCO DE DADOS =====")
+        print("1 - Cadastrar aluno")
+        print("2 - Cadastrar professor")
+        print("3 - Cadastrar disciplina")
+        print("4 - Ver tabelas")
+        print("0 - Voltar")
+
+        op = input("Escolha: ")
+
+        if op == "1":
+            cadastrar_aluno()
+        elif op == "2":
+            cadastrar_professor()
+        elif op == "3":
+            cadastrar_disciplina()
+        elif op == "4":
+            ver_tabelas()
+        elif op == "0":
+            break
+        else:
+            print("Opção inválida!")
+
+
+
+# GERAR ID AUTOMÁTICO POR TIPO
+
+def gerar_id(tipo):
+    if not os.path.exists(ARQUIVO):
+        return 1
+
+    with open(ARQUIVO, "r", encoding="utf-8") as f:
+        linhas = f.readlines()
+
+    ids = []
+
+    for linha in linhas:
+        partes = linha.strip().split("|")
+        if partes[0] == tipo:
+            ids.append(int(partes[1]))
+
+    if not ids:
+        return 1
+
+    return max(ids) + 1
+
+
+
+# CADASTROS
+
+def cadastrar_aluno():
+    matricula = gerar_id("ALUNO")
+
+    nome = input("Nome: ")
+    turma = input("Turma: ")
+
+    with open(ARQUIVO, "a", encoding="utf-8") as f:
+        f.write(f"ALUNO|{matricula}|{nome}|{turma}\n")
+
+    print("Aluno cadastrado!")
+
+
+def cadastrar_professor():
+    id_prof = gerar_id("PROFESSOR")
+
+    nome = input("Nome: ")
+    area = input("Área: ")
+
+    with open(ARQUIVO, "a", encoding="utf-8") as f:
+        f.write(f"PROFESSOR|{id_prof}|{nome}|{area}\n")
+
+    print("Professor cadastrado!")
+
+
+def cadastrar_disciplina():
+    id_disc = gerar_id("DISCIPLINA")
+
+    nome = input("Nome: ")
+    carga = input("Carga Horária: ")
+    professor = input("Id do professor: ")
+
+    with open(ARQUIVO, "a", encoding="utf-8") as f:
+        f.write(f"DISCIPLINA|{id_disc}|{nome}|{carga}|{professor}\n")
+
+    print("Disciplina cadastrada!")
+
+
+
+# VER TABELAS (FORMATADO)
+
+def ver_tabelas():
+    if not os.path.exists(ARQUIVO):
+        print("Nenhum dado cadastrado.")
+        return
+
+    with open(ARQUIVO, "r", encoding="utf-8") as f:
+        
+        linhas = f.readlines()
+
+    # ALUNOS
+    print("\n===== ALUNOS =====")
+    print(f"{'ID':<5} {'NOME':<20} {'TURMA':<10}")
+    print("-" * 40)
+
+    for l in linhas:
+        if l.startswith("ALUNO"):
+            partes = l.strip().split("|")
+            print(f"{partes[1]:<5} {partes[2]:<20} {partes[3]:<10}")
+
+    # PROFESSORES
+    print("\n===== PROFESSORES =====")
+    print(f"{'ID':<5} {'NOME':<20} {'ÁREA':<15}")
+    print("-" * 45)
+
+    for l in linhas:
+        if l.startswith("PROFESSOR"):
+            partes = l.strip().split("|")
+            print(f"{partes[1]:<5} {partes[2]:<20} {partes[3]:<15}")
+
+    # DISCIPLINAS
+    print("\n===== DISCIPLINAS =====")
+    print(f"{'ID':<5} {'NOME':<20} {'CARGA':<10} {'PROF':<5}")
+    print("-" * 50)
+
+    for l in linhas:
+        if l.startswith("DISCIPLINA"):
+            partes = l.strip().split("|")
+            print(f"{partes[1]:<5} {partes[2]:<20} {partes[3]:<10} {partes[4]:<5}")
+
+
+# INICIAR
+
+menu_principal()
